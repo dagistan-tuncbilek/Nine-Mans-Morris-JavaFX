@@ -230,13 +230,17 @@ public class GuiBoardUtils {
 		stopAudioTimeline.play();
 	}
 
-	public static void isGameEnded() {
+	public static boolean isGameEnded() {
 		final Board board = new Board(SingletonBoard.getBoard().getPieceColorList(), PieceColor.WHITE);
-
+		System.out.println("W: " + board.whitePlayer().getLegalMoves().size() + "  B: " + board.blackPlayer().getLegalMoves().size());
 		if (board.whitePlayer().getPieceCount() < 3 || board.whitePlayer().getLegalMoves().size() == 0) {
 			endGameWindow("Black");
-		} else if (board.blackPlayer().getPieceCount() < 3 || board.currentPlayer().getOpponent().getLegalMoves().size() == 0) {
+			System.out.println(board.whitePlayer().getLegalMoves().size());
+			return true;
+		} else if (board.blackPlayer().getPieceCount() < 3 || board.blackPlayer().getLegalMoves().size() == 0) {
 			endGameWindow("White");
+			System.out.println(board.blackPlayer().getLegalMoves().size());
+			return true;
 		} 
 		if (board.whitePlayer().getPieceCount() == 3) {
 			SingletonBoard.getBoard().setWhiteFlying(true);
@@ -244,6 +248,7 @@ public class GuiBoardUtils {
 		if (board.blackPlayer().getPieceCount() == 3) {
 			SingletonBoard.getBoard().setBlackFlying(true);
 		}
+		return false;
 	}
 
 	public static Alert endGameWindow(String player) {

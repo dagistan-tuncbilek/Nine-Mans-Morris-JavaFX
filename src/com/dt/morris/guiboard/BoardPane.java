@@ -22,7 +22,6 @@ public class BoardPane extends Pane {
 	private TurnStatus turnStatus;
 	private Difficulty difficulty = Difficulty.NORMAL;
 	private int CIRCLE_GROUP_INDEX;
-	private int searchDepth = 3;
 	private PieceColor deleteThisColor = PieceColor.EMPTY;
 	private boolean isWhiteHuman = true;
 	private boolean isWhiteFlying = false;
@@ -42,6 +41,7 @@ public class BoardPane extends Pane {
 				GuiMenuBarUtils.getHeaderLabel());
 		getChildren().add(GuiBoardUtils.getImage());
 		getChildren().addAll(GuiMenuBarUtils.moveListArea(), GuiMenuBarUtils.analizeArea()); // index 8
+		getChildren().add(GuiMenuBarUtils.getTableLabel());
 
 		new MediaPlayer(new Media(new File("./assets/start.wav").toURI().toString())).play();
 
@@ -111,14 +111,6 @@ public class BoardPane extends Pane {
 			this.turnStatus = TurnStatus.WHITE;
 			buildNewBord();
 		}
-	}
-
-	public int getSearchDepth() {
-		return searchDepth;
-	}
-
-	public void setSearchDepth(int searchDepth) {
-		this.searchDepth = searchDepth;
 	}
 
 	public PieceColor getDeleteThisColor() {

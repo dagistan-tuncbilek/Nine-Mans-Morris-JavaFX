@@ -80,8 +80,10 @@ public abstract class GuiPiece extends Circle {
 									getColor() == Color.WHITE ? PieceColor.BLACK : PieceColor.WHITE);
 						} else {
 							SingletonBoard.getBoard().changeTurnStatus();
-							AiMove aiMove = new AiMove();
-							aiMove.start();
+							if (!GuiBoardUtils.isGameEnded()) {
+								AiMove aiMove = new AiMove();
+								aiMove.start();
+							}
 						}
 					}
 				}
@@ -92,7 +94,7 @@ public abstract class GuiPiece extends Circle {
 		setOnMousePressed(e -> {
 			mouseX = e.getSceneX();
 			mouseY = e.getSceneY();
-			if (SingletonBoard.getBoard().getAiMoveStatus() == AiMoveStatus.DONE) {
+			if (SingletonBoard.getBoard().getAiMoveStatus() == AiMoveStatus.DONE && !GuiBoardUtils.isGameEnded()) {
 				if (SingletonBoard.getBoard().getDeleteThisColor() == PieceColor.EMPTY) {
 					if (hasDragEvent && SingletonBoard.getBoard().getAiMoveStatus() != AiMoveStatus.IN_PROCESS) {
 
@@ -125,8 +127,7 @@ public abstract class GuiPiece extends Circle {
 					SingletonBoard.getBoard().changeTurnStatus();
 					GuiMenuBarUtils.sbForMoveList.append("(Mill)->" +  GuiBoardUtils.getTextCoordinat(deletedPieceCoordinate) + "x  ");		
 					GuiMenuBarUtils.moveList.set(GuiMenuBarUtils.sbForMoveList.toString());
-					GuiBoardUtils.isGameEnded();
-					if (SingletonBoard.getBoard().getAiMoveStatus() == AiMoveStatus.DONE) {
+					if (SingletonBoard.getBoard().getAiMoveStatus() == AiMoveStatus.DONE && !GuiBoardUtils.isGameEnded()) {
 						AiMove aiMove = new AiMove();
 						aiMove.start();
 					}

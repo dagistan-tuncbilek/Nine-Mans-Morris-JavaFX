@@ -3,7 +3,6 @@ package com.dt.morris.gui;
 import com.dt.morris.board.PieceColor;
 import com.dt.morris.circle.CircleFactory;
 import com.dt.morris.engine.MiniMax;
-import com.dt.morris.guiboard.BoardPane;
 import com.dt.morris.guiboard.GuiBoardUtils;
 import com.dt.morris.move.Move;
 
@@ -19,7 +18,7 @@ public class AiMove extends Thread {
 
 	public void run() {
 		SingletonBoard.getBoard().setAiMoveStatus(AiMoveStatus.IN_PROCESS);
-		MiniMax miniMax = new MiniMax(SingletonBoard.getBoard().getSearchDepth());
+		MiniMax miniMax = new MiniMax(SingletonBoard.getBoard().getDifficulty().getLevel());
 		Move move = miniMax.execute(SingletonBoard.getBoard().getPieceColorList(),
 				SingletonBoard.getBoard().isWhiteHuman() ? PieceColor.BLACK : PieceColor.WHITE);
 

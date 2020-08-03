@@ -5,6 +5,7 @@ import java.util.List;
 import com.dt.morris.board.Board;
 import com.dt.morris.board.PieceColor;
 import com.dt.morris.gui.SingletonBoard;
+import com.dt.morris.guiboard.Analize;
 import com.dt.morris.guiboard.GuiBoardUtils;
 import com.dt.morris.guimenu.GuiMenuBarUtils;
 import com.dt.morris.move.Move;
@@ -33,6 +34,7 @@ public final class MiniMax {
 	}
 
 	public Move execute(List<PieceColor> pieceColorList, PieceColor playerColor) {
+		GuiMenuBarUtils.analizeList.clear();
 		Board board = new Board(pieceColorList, playerColor);
 		final long startTime = System.currentTimeMillis();
 		Move bestMove = MoveFactory.getNullMove();
@@ -49,8 +51,8 @@ public final class MiniMax {
 			currentValue = board.currentPlayer().getColor().isWhite()
 					? min(moveTransition.getBoard(), intelligentSearchDepth - 1)
 					: max(moveTransition.getBoard(), intelligentSearchDepth - 1);
-//			System.out.println("\t" + toString() + " analyzing move (" + moveCounter + "/" + numMoves + ") " + move
-//					+ " scores " + currentValue);
+			System.out.println("\t" + toString() + " analyzing move (" + moveCounter + "/" + numMoves + ") " + move
+					+ " scores " + currentValue);
 
 //					sb.append(BoardPane.moveList);
 //
@@ -58,7 +60,8 @@ public final class MiniMax {
 //							+ numMoves + ") " + "\t\t" + GuiBoardUtils.getTextCoordinat(move.getCurrentCoordinate()) + "-"
 //							+ GuiBoardUtils.getTextCoordinat(move.getDestinationCoordinate()) + "    " + "\t" + " Score" + "\t:  "
 //							+ currentValue + "\n");
-
+			addObservableList(moveCounter, moveCounter, numMoves, GuiBoardUtils.getTextCoordinat(move.getCurrentCoordinate()),
+					GuiBoardUtils.getTextCoordinat(move.getDestinationCoordinate()), currentValue);
 			if (board.currentPlayer().getColor().isWhite() && currentValue >= highestSeenValue) {
 				highestSeenValue = currentValue;
 				bestMove = move;
@@ -74,27 +77,29 @@ public final class MiniMax {
 				this.boardsEvaluated, this.executionTime,
 				(1000 * ((double) this.boardsEvaluated / this.executionTime)));
 
-//		sb.append("\t" + board.currentPlayer() + " selects \t" + GuiBoardUtils.getTextCoordinat(bestMove.getCurrentCoordinate()) + "-"
-//				+ GuiBoardUtils.getTextCoordinat(bestMove.getDestinationCoordinate()) + "\t    Evaluated Boards: "
-//				+ this.boardsEvaluated + "\t Time : " + this.executionTime + " ms" + "\n" + "\n" + BoardPane.moveList.toString());
-		
-		appendToStringBuilder(bestMove.getCurrentCoordinate(), bestMove.getDestinationCoordinate(), bestMove.getDeletedPieceCoordinate());
+		appendToStringBuilder(bestMove.getCurrentCoordinate(), bestMove.getDestinationCoordinate(),
+				bestMove.getDeletedPieceCoordinate());
 		GuiMenuBarUtils.moveList.set(GuiMenuBarUtils.sbForMoveList.toString());
 
 		if (this.boardsEvaluated == Integer.MIN_VALUE || this.boardsEvaluated == Integer.MAX_VALUE) {
 			System.out.println("somethings wrong with the # of boards evaluated!");
-		}		
+		}
 		return bestMove;
+	}
+
+	private void addObservableList(int i, int moveCounter, int numMoves, String firstMove, String secondMove, int score) {
+		GuiMenuBarUtils.analizeList.add(new Analize(i + "/" + numMoves, firstMove + "-" + secondMove, score));
 	}
 
 	private void appendToStringBuilder(int currentCoordinate, int destinationCoordinate, int deletedPieceCoordinate) {
 		if (!SingletonBoard.getBoard().isWhiteHuman()) {
-			GuiMenuBarUtils.sbForMoveList.append(++GuiMenuBarUtils.moveCounter + ". ");	
+			GuiMenuBarUtils.sbForMoveList.append(++GuiMenuBarUtils.moveCounter + ". ");
 		}
 		GuiMenuBarUtils.sbForMoveList.append(GuiBoardUtils.getTextCoordinat(currentCoordinate) + "-");
 		GuiMenuBarUtils.sbForMoveList.append(GuiBoardUtils.getTextCoordinat(destinationCoordinate) + "  ");
-		if (deletedPieceCoordinate>-1) {
-			GuiMenuBarUtils.sbForMoveList.append("(Mill)->" +  GuiBoardUtils.getTextCoordinat(deletedPieceCoordinate) + "x  ");
+		if (deletedPieceCoordinate > -1) {
+			GuiMenuBarUtils.sbForMoveList
+					.append("(Mill)->" + GuiBoardUtils.getTextCoordinat(deletedPieceCoordinate) + "x  ");
 		}
 	}
 

@@ -3,6 +3,7 @@ package com.dt.morris.gui;
 import com.dt.morris.board.PieceColor;
 import com.dt.morris.circle.CircleFactory;
 import com.dt.morris.engine.MiniMax;
+import com.dt.morris.guiboard.BoardPane;
 import com.dt.morris.guiboard.GuiBoardUtils;
 import com.dt.morris.move.Move;
 
@@ -17,12 +18,12 @@ import javafx.util.Duration;
 public class AiMove extends Thread {
 
 	public void run() {
-		SingletonBoard.getBoard().setGuiMoveStatus(AiMoveStatus.IN_PROCESS);
+		SingletonBoard.getBoard().setAiMoveStatus(AiMoveStatus.IN_PROCESS);
 		MiniMax miniMax = new MiniMax(SingletonBoard.getBoard().getSearchDepth());
 		Move move = miniMax.execute(SingletonBoard.getBoard().getPieceColorList(),
 				SingletonBoard.getBoard().isWhiteHuman() ? PieceColor.BLACK : PieceColor.WHITE);
 
-		Group group = (Group) SingletonBoard.getBoard().getChildren().get(1);
+		Group group = (Group) SingletonBoard.getBoard().getChildren().get(SingletonBoard.getBoard().getCIRCLE_GROUP_INDEX());
 
 		Circle currentCircle = (Circle) group.getChildren().get(move.getCurrentCoordinate());
 		Circle targetCircle = (Circle) group.getChildren().get(move.getDestinationCoordinate());
@@ -39,9 +40,9 @@ public class AiMove extends Thread {
 
 		Timeline soundTimeline = new Timeline(new KeyFrame(Duration.millis(900), ev -> {
 			if (move.getDeletedPieceCoordinate() == -1) {
-				GuiBoardUtils.playNormalMove();
+				GuiBoardUtils.playAudio("normal");
 			} else {
-				GuiBoardUtils.playDeleteMove();
+				GuiBoardUtils.playAudio("delete");
 			}
 		}));
 		soundTimeline.play();
@@ -61,7 +62,7 @@ public class AiMove extends Thread {
 			SingletonBoard.getBoard().getPieceColorList().set(move.getCurrentCoordinate(), PieceColor.EMPTY);
 
 			SingletonBoard.getBoard().changeTurnStatus();
-			SingletonBoard.getBoard().setGuiMoveStatus(AiMoveStatus.DONE);
+			SingletonBoard.getBoard().setAiMoveStatus(AiMoveStatus.DONE);
 		}));
 		aimationTimeline.play();
 

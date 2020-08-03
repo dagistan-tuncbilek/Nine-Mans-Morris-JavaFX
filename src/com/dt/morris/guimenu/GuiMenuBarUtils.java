@@ -1,7 +1,10 @@
 package com.dt.morris.guimenu;
 
 import com.dt.morris.gui.Difficulty;
+import com.dt.morris.gui.SingletonBoard;
+import com.dt.morris.guiboard.BoardPane;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.text.Font;
@@ -9,6 +12,10 @@ import javafx.scene.text.FontWeight;
 
 
 public class GuiMenuBarUtils {
+	
+	public static SimpleStringProperty moveList = new SimpleStringProperty();
+	public static StringBuilder sbForMoveList = new StringBuilder();
+	public static int moveCounter = 0;
 	
 	public GuiMenuBarUtils() {
 	    throw new UnsupportedOperationException(
@@ -39,6 +46,8 @@ public class GuiMenuBarUtils {
 		textArea.setPrefHeight(250);
 		textArea.setEditable(false);
 		textArea.setWrapText(true);
+		SingletonBoard.getBoard();
+		textArea.textProperty().bind(moveList);
 		return textArea;
 	}
 	

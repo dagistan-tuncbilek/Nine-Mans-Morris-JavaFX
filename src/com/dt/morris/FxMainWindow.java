@@ -9,7 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 
 
-public class Main extends Application {
+public class FxMainWindow extends Application {
+	
 	@Override
 	public void start(Stage stage) {
 		try {

@@ -12,9 +12,12 @@ import com.dt.morris.board.PieceColor;
 import com.dt.morris.circle.BlackCircle;
 import com.dt.morris.circle.CircleFactory;
 import com.dt.morris.circle.WhiteCircle;
+import com.dt.morris.gui.AiMoveStatus;
 import com.dt.morris.gui.SingletonBoard;
 import com.dt.morris.gui.TurnStatus;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
@@ -24,6 +27,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import javafx.util.Duration;
 
 public class GuiBoardUtils {
 
@@ -204,51 +208,52 @@ public class GuiBoardUtils {
 		return false;
 	}
 
-	public static void playNormalMove() {
-		String musicFile = "./assets/normalMove.wav";
+	public static void playAudio(String audioName) {
+		String musicFile;
+		switch (audioName) {
+		case "newgame":
+			musicFile = "./assets/newGame.wav";
+			break;
+		case "delete":
+			musicFile = "./assets/deleteMove.wav";
+			break;
+		default:
+			musicFile = "./assets/normalMove.wav";
+			break;
+		}
 		Media sound = new Media(new File(musicFile).toURI().toString());
 		MediaPlayer mediaPlayer = new MediaPlayer(sound);
 		mediaPlayer.play();
-	}
-
-	public static void playDeleteMove() {
-		String musicFile = "./assets/deleteMove.wav";
-		Media sound = new Media(new File(musicFile).toURI().toString());
-		MediaPlayer mediaPlayer = new MediaPlayer(sound);
-		mediaPlayer.play();
-	}
-
-	public static void playNewGameMove() {
-		String musicFile = "./assets/newGame.wav";
-		Media sound = new Media(new File(musicFile).toURI().toString());
-		MediaPlayer mediaPlayer = new MediaPlayer(sound);
-		mediaPlayer.play();
+		Timeline stopAudioTimeline = new Timeline(new KeyFrame(Duration.millis(450), ev -> {
+			mediaPlayer.stop();
+		}));
+		stopAudioTimeline.play();
 	}
 
 	public static void isGameEnded() {
 		final Board board = new Board(SingletonBoard.getBoard().getPieceColorList(), PieceColor.WHITE);
-		System.out.println("White Pieces : " + board.whitePlayer().getPieceCount());
-		System.out.println("Black Pieces" + board.blackPlayer().getPieceCount());
 
-		if (board.whitePlayer().getPieceCount() < 3) {
+		if (board.whitePlayer().getPieceCount() < 3 || board.whitePlayer().getLegalMoves().size() == 0) {
 			endGameWindow("Black");
-		} else if (board.blackPlayer().getPieceCount() < 3) {
+		} else if (board.blackPlayer().getPieceCount() < 3 || board.currentPlayer().getOpponent().getLegalMoves().size() == 0) {
 			endGameWindow("White");
-		} else if (board.whitePlayer().getLegalMoves().size() == 0) {
-			endGameWindow("Black");
-		} else if (board.currentPlayer().getOpponent().getLegalMoves().size() == 0) {
-			endGameWindow("White");
-
+		} 
+		if (board.whitePlayer().getPieceCount() == 3) {
+			SingletonBoard.getBoard().setWhiteFlying(true);
+		}
+		if (board.blackPlayer().getPieceCount() == 3) {
+			SingletonBoard.getBoard().setBlackFlying(true);
 		}
 	}
 
 	public static Alert endGameWindow(String player) {
-	    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-	    alert.setTitle("Nine Man's Morris");
-	    alert.setHeaderText("Game Finished");
-	    alert.setContentText("Good game. " + player + " won! Click OK to exit.");
-	    alert.setOnHidden(evt -> alert.close());
-	    alert.show(); 
+		SingletonBoard.getBoard().setAiMoveStatus(AiMoveStatus.IN_PROCESS);
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Nine Man's Morris");
+		alert.setHeaderText("Game Finished");
+		alert.setContentText("Good game. " + player + " won! Click OK to exit.");
+		alert.setOnHidden(evt -> alert.close());
+		alert.show();
 		return alert;
 	}
 }

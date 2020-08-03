@@ -1,5 +1,6 @@
 package com.dt.morris.guiboard;
 
+import java.io.File;
 import java.util.List;
 
 import com.dt.morris.board.PieceColor;
@@ -11,44 +12,54 @@ import com.dt.morris.guimenu.GuiMenuBarUtils;
 
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 public class BoardPane extends Pane {
 
 	private List<PieceColor> pieceColorList;
-	private AiMoveStatus guiMoveStatus;
+	private AiMoveStatus aiMoveStatus;
 	private TurnStatus turnStatus;
 	private Difficulty difficulty = Difficulty.NORMAL;
-	private Group circleGroup;
-	private boolean isWhiteHuman = true;
-	public static int CIRCLE_GROUP_INDEX = 1;
+	private int CIRCLE_GROUP_INDEX;
 	private int searchDepth = 3;
 	private PieceColor deleteThisColor = PieceColor.EMPTY;
+	private boolean isWhiteHuman = true;
+	private boolean isWhiteFlying = false;
+	private boolean isBlackFlying = false;
 
 	public BoardPane() {
 		this.pieceColorList = GuiBoardUtils.getInitialColorList(isWhiteHuman);
-		this.guiMoveStatus = AiMoveStatus.DONE;
+		this.aiMoveStatus = AiMoveStatus.DONE;
 		this.turnStatus = TurnStatus.WHITE;
 		setStyle("-fx-background-color:#cce7e8;");
 		getChildren().add(GuiBoardUtils.getLines());
-		getChildren().add(GuiBoardUtils.getCircles(this.isWhiteHuman));
+		Group circleGroup = GuiBoardUtils.getCircles(this.isWhiteHuman);
+		getChildren().add(circleGroup);
+		CIRCLE_GROUP_INDEX = getChildren().indexOf(circleGroup);
 		getChildren().add(GuiMenuBarUtils.getDifficultyLabel(difficulty)); // index 2
 		getChildren().addAll(GuiMenuBarUtils.getRLabel(), GuiMenuBarUtils.getTextLabel(),
 				GuiMenuBarUtils.getHeaderLabel());
 		getChildren().add(GuiBoardUtils.getImage());
-		getChildren().addAll(GuiMenuBarUtils.moveListArea(), GuiMenuBarUtils.analizeArea());
-		GuiBoardUtils.playNewGameMove();
+		getChildren().addAll(GuiMenuBarUtils.moveListArea(), GuiMenuBarUtils.analizeArea()); // index 8
+
+		new MediaPlayer(new Media(new File("./assets/start.wav").toURI().toString())).play();
+
 	}
 
 	public void buildNewBord() {
 		this.turnStatus = TurnStatus.WHITE;
 		getChildren().set(CIRCLE_GROUP_INDEX, GuiBoardUtils.getCircles(isWhiteHuman));
 		pieceColorList = GuiBoardUtils.getInitialColorList(isWhiteHuman);
+		setAiMoveStatus(AiMoveStatus.DONE);
+		isWhiteFlying = false;
+		isWhiteFlying = false;
+		GuiMenuBarUtils.moveCounter = 0;
 		if (!isWhiteHuman && this.turnStatus == TurnStatus.WHITE) {
-			System.out.println("Boarpane Thread");
 			AiMove aiMove = new AiMove();
 			aiMove.start();
 		}
-		GuiBoardUtils.playNewGameMove();
+		GuiBoardUtils.playAudio("newgame");
 	}
 
 	public Difficulty getDifficulty() {
@@ -62,10 +73,6 @@ public class BoardPane extends Pane {
 		}
 	}
 
-	public Group getCircleGroup() {
-		return circleGroup;
-	}
-
 	public List<PieceColor> getPieceColorList() {
 		return pieceColorList;
 	}
@@ -74,12 +81,12 @@ public class BoardPane extends Pane {
 		this.pieceColorList = pieceColorList;
 	}
 
-	public AiMoveStatus getGuiMoveStatus() {
-		return guiMoveStatus;
+	public AiMoveStatus getAiMoveStatus() {
+		return this.aiMoveStatus;
 	}
 
-	public void setGuiMoveStatus(AiMoveStatus guiMoveStatus) {
-		this.guiMoveStatus = guiMoveStatus;
+	public void setAiMoveStatus(AiMoveStatus aiMoveStatus) {
+		this.aiMoveStatus = aiMoveStatus;
 	}
 
 	public TurnStatus getTurnStatus() {
@@ -120,5 +127,25 @@ public class BoardPane extends Pane {
 
 	public void setDeleteThisColor(PieceColor deleteThisColor) {
 		this.deleteThisColor = deleteThisColor;
+	}
+
+	public boolean isWhiteFlying() {
+		return isWhiteFlying;
+	}
+
+	public void setWhiteFlying(boolean isWhiteFlying) {
+		this.isWhiteFlying = isWhiteFlying;
+	}
+
+	public boolean isBlackFlying() {
+		return isBlackFlying;
+	}
+
+	public void setBlackFlying(boolean isBlackFlying) {
+		this.isBlackFlying = isBlackFlying;
+	}
+
+	public int getCIRCLE_GROUP_INDEX() {
+		return CIRCLE_GROUP_INDEX;
 	}
 }

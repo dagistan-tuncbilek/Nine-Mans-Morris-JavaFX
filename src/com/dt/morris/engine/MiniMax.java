@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.dt.morris.board.Board;
 import com.dt.morris.board.PieceColor;
+import com.dt.morris.gui.SingletonBoard;
+import com.dt.morris.guiboard.GuiBoardUtils;
+import com.dt.morris.guimenu.GuiMenuBarUtils;
 import com.dt.morris.move.Move;
 import com.dt.morris.move.MoveFactory;
 
@@ -49,11 +52,13 @@ public final class MiniMax {
 //			System.out.println("\t" + toString() + " analyzing move (" + moveCounter + "/" + numMoves + ") " + move
 //					+ " scores " + currentValue);
 
-//			BoardViever.engineTextArea.append("\t" + toString() + " analyzing move" + "\t" + "(" + moveCounter + " / "
-//					+ numMoves + ") " + "\t\t" + GuiUtils.setCoordinateToText(move.getCurrentCoordinate()) + "-"
-//					+ GuiUtils.setCoordinateToText(move.getDestinationCoordinate()) + "    " + "\t" + " Score" + "\t:  "
-//					+ currentValue + "\n");
-//				analysList.add(new int[] {currentValue, move.getCurrentCoordinate(), move.getDestinationCoordinate()});				
+//					sb.append(BoardPane.moveList);
+//
+//					sb.append("\t" + toString() + " analyzing move" + "\t" + "(" + moveCounter + " / "
+//							+ numMoves + ") " + "\t\t" + GuiBoardUtils.getTextCoordinat(move.getCurrentCoordinate()) + "-"
+//							+ GuiBoardUtils.getTextCoordinat(move.getDestinationCoordinate()) + "    " + "\t" + " Score" + "\t:  "
+//							+ currentValue + "\n");
+
 			if (board.currentPlayer().getColor().isWhite() && currentValue >= highestSeenValue) {
 				highestSeenValue = currentValue;
 				bestMove = move;
@@ -68,34 +73,30 @@ public final class MiniMax {
 		System.out.printf("%s SELECTS %s [#boards = %d, time taken = %d ms]\n", board.currentPlayer(), bestMove,
 				this.boardsEvaluated, this.executionTime,
 				(1000 * ((double) this.boardsEvaluated / this.executionTime)));
-//		String str = "\t" + board.currentPlayer() + " selects \t" + GuiUtils.setCoordinateToText(bestMove.getCurrentCoordinate()) + "-"
-//				+ GuiUtils.setCoordinateToText(bestMove.getDestinationCoordinate()) + "\t    Evaluated Boards: "
-//				+ this.boardsEvaluated + "\t Time : " + this.executionTime + " ms" + "\n" + "\n";
-//		BoardViever.engineTextArea.insert(0, str);
+
+//		sb.append("\t" + board.currentPlayer() + " selects \t" + GuiBoardUtils.getTextCoordinat(bestMove.getCurrentCoordinate()) + "-"
+//				+ GuiBoardUtils.getTextCoordinat(bestMove.getDestinationCoordinate()) + "\t    Evaluated Boards: "
+//				+ this.boardsEvaluated + "\t Time : " + this.executionTime + " ms" + "\n" + "\n" + BoardPane.moveList.toString());
+		
+		appendToStringBuilder(bestMove.getCurrentCoordinate(), bestMove.getDestinationCoordinate(), bestMove.getDeletedPieceCoordinate());
+		GuiMenuBarUtils.moveList.set(GuiMenuBarUtils.sbForMoveList.toString());
+
 		if (this.boardsEvaluated == Integer.MIN_VALUE || this.boardsEvaluated == Integer.MAX_VALUE) {
 			System.out.println("somethings wrong with the # of boards evaluated!");
-		}
-//		saveTextArea(playerColor);
+		}		
 		return bestMove;
 	}
 
-//	private void saveTextArea(StoneColor playerColor) {
-//		Collections.sort(analysList, new Comparator<int[]>() {
-//			@Override
-//			public int compare(int[] i, int[] j) {
-//				if (playerColor == StoneColor.BLACK) {
-//					return i[0] - j[0];
-//				} else {
-//					return j[0] - i[0];
-//				}
-//			}		
-//		});			
-//				
-//		for(int[] i : analysList) {
-//			BoardViever.engineTextArea.append("Move :" + GuiUtils.setCoordinateToText(i[1]) + "-" + GuiUtils.setCoordinateToText(i[2]) +
-//					"\t" + "Analyze result : " + i[0] + "\n");
-//		}
-//	}
+	private void appendToStringBuilder(int currentCoordinate, int destinationCoordinate, int deletedPieceCoordinate) {
+		if (!SingletonBoard.getBoard().isWhiteHuman()) {
+			GuiMenuBarUtils.sbForMoveList.append(++GuiMenuBarUtils.moveCounter + ". ");	
+		}
+		GuiMenuBarUtils.sbForMoveList.append(GuiBoardUtils.getTextCoordinat(currentCoordinate) + "-");
+		GuiMenuBarUtils.sbForMoveList.append(GuiBoardUtils.getTextCoordinat(destinationCoordinate) + "  ");
+		if (deletedPieceCoordinate>-1) {
+			GuiMenuBarUtils.sbForMoveList.append("(Mill)->" +  GuiBoardUtils.getTextCoordinat(deletedPieceCoordinate) + "x  ");
+		}
+	}
 
 	private int min(final Board board, final int depth) {
 		if (depth == 0) {

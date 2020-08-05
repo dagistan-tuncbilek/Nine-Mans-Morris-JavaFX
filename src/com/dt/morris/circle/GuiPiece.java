@@ -29,6 +29,7 @@ public abstract class GuiPiece extends Circle {
 
 		setOnMouseReleased(e -> {
 			if (hasDragEvent && SingletonBoard.getBoard().getAiMoveStatus() == AiMoveStatus.DONE) {
+
 				int[] candidatePoints;
 				if ((getColor() == Color.WHITE && SingletonBoard.getBoard().isWhiteFlying())
 						|| (getColor() == Color.BLACK && SingletonBoard.getBoard().isBlackFlying())) {
@@ -38,51 +39,54 @@ public abstract class GuiPiece extends Circle {
 				}
 				Group group = (Group) SingletonBoard.getBoard().getChildren()
 						.get(SingletonBoard.getBoard().getCIRCLE_GROUP_INDEX());
+
 				for (int targetCoord : candidatePoints) {
 					Circle targetCircle = (Circle) group.getChildren().get(targetCoord);
 					if (targetCircle.getClass() == CandidatePoint.class) {
+						
 						targetCircle.setVisible(false);
-					}
-					if ((e.getSceneX() - targetCircle.getLayoutX()) - 20 < 25
-							&& (e.getSceneX() - targetCircle.getLayoutX()) > -25
-							&& (e.getSceneY() - targetCircle.getLayoutY() - 20) - 25 < 20
-							&& (e.getSceneY() - targetCircle.getLayoutY() - 20) > -25) {
-
-						int currentCoord = group.getChildren().indexOf(this);
-						SingletonBoard.getBoard().getPieceColorList().set(targetCoord,
-								SingletonBoard.getBoard().getPieceColorList().get(currentCoord));
-						SingletonBoard.getBoard().getPieceColorList().set(currentCoord, PieceColor.EMPTY);
-
-						group.getChildren().set(targetCoord,
-								CircleFactory.getCircle(getColor(), targetCircle.getId(), targetCircle.getLayoutX(),
-										targetCircle.getLayoutY(), SingletonBoard.getBoard().isWhiteHuman()));
-						group.getChildren().set(currentCoord,
-								CircleFactory.getCircle(Color.LIGHTGRAY, getId(), this.oldX, this.oldY, null));
 						
-						if (SingletonBoard.getBoard().isWhiteHuman()) {
-							GuiMenuBarUtils.sbForMoveList.append(++GuiMenuBarUtils.moveCounter + ". ");	
-						}
-						
-						GuiMenuBarUtils.sbForMoveList.append(GuiBoardUtils.getTextCoordinat(currentCoord) + "-");
-						GuiMenuBarUtils.sbForMoveList.append(GuiBoardUtils.getTextCoordinat(targetCoord) + "  ");
-						GuiMenuBarUtils.moveList.set(GuiMenuBarUtils.sbForMoveList.toString());
-						boolean isMill = BoardUtils.controlMill(SingletonBoard.getBoard().getPieceColorList(),
-								targetCoord);
+						if ((e.getSceneX() - targetCircle.getLayoutX()) - 20 < 25
+								&& (e.getSceneX() - targetCircle.getLayoutX()) > -25
+								&& (e.getSceneY() - targetCircle.getLayoutY() - 20) - 25 < 20
+								&& (e.getSceneY() - targetCircle.getLayoutY() - 20) > -25) {
 
-						if (isMill) {
-							GuiBoardUtils.playAudio("delete");
-						} else {
-							GuiBoardUtils.playAudio("normal");
-						}
-						
-						if (isMill) {
-							SingletonBoard.getBoard().setDeleteThisColor(
-									getColor() == Color.WHITE ? PieceColor.BLACK : PieceColor.WHITE);
-						} else {
-							SingletonBoard.getBoard().changeTurnStatus();
-							if (!GuiBoardUtils.isGameEnded()) {
-								AiMove aiMove = new AiMove();
-								aiMove.start();
+							int currentCoord = group.getChildren().indexOf(this);
+							SingletonBoard.getBoard().getPieceColorList().set(targetCoord,
+									SingletonBoard.getBoard().getPieceColorList().get(currentCoord));
+							SingletonBoard.getBoard().getPieceColorList().set(currentCoord, PieceColor.EMPTY);
+
+							group.getChildren().set(targetCoord,
+									CircleFactory.getCircle(getColor(), targetCircle.getId(), targetCircle.getLayoutX(),
+											targetCircle.getLayoutY(), SingletonBoard.getBoard().isWhiteHuman()));
+							group.getChildren().set(currentCoord,
+									CircleFactory.getCircle(Color.LIGHTGRAY, getId(), this.oldX, this.oldY, null));
+
+							if (SingletonBoard.getBoard().isWhiteHuman()) {
+								GuiMenuBarUtils.sbForMoveList.append(++GuiMenuBarUtils.moveCounter + ". ");
+							}
+
+							GuiMenuBarUtils.sbForMoveList.append(GuiBoardUtils.getTextCoordinat(currentCoord) + "-");
+							GuiMenuBarUtils.sbForMoveList.append(GuiBoardUtils.getTextCoordinat(targetCoord) + "  ");
+							GuiMenuBarUtils.moveList.set(GuiMenuBarUtils.sbForMoveList.toString());
+							boolean isMill = BoardUtils.controlMill(SingletonBoard.getBoard().getPieceColorList(),
+									targetCoord);
+
+							if (isMill) {
+								GuiBoardUtils.playAudio("delete");
+							} else {
+								GuiBoardUtils.playAudio("normal");
+							}
+
+							if (isMill) {
+								SingletonBoard.getBoard().setDeleteThisColor(
+										getColor() == Color.WHITE ? PieceColor.BLACK : PieceColor.WHITE);
+							} else {
+								SingletonBoard.getBoard().changeTurnStatus();
+								if (!GuiBoardUtils.isGameEnded()) {
+									AiMove aiMove = new AiMove();
+									aiMove.start();
+								}
 							}
 						}
 					}
@@ -94,43 +98,46 @@ public abstract class GuiPiece extends Circle {
 		setOnMousePressed(e -> {
 			mouseX = e.getSceneX();
 			mouseY = e.getSceneY();
-			if (SingletonBoard.getBoard().getAiMoveStatus() == AiMoveStatus.DONE && !GuiBoardUtils.isGameEnded()) {
-				if (SingletonBoard.getBoard().getDeleteThisColor() == PieceColor.EMPTY) {
-					if (hasDragEvent && SingletonBoard.getBoard().getAiMoveStatus() != AiMoveStatus.IN_PROCESS) {
-
-						int[] candidatePoints;
-						if ((getColor() == Color.WHITE && SingletonBoard.getBoard().isWhiteFlying())
-								|| (getColor() == Color.BLACK && SingletonBoard.getBoard().isBlackFlying())) {
-							candidatePoints = MoveUtils.getFlyingStoneCandidateCoordinates();
-						} else {
-							candidatePoints = MoveUtils.getStoneCandidateCoordinates(Integer.parseInt(getId()));
-						}
-						for (int i : candidatePoints) {
-							Group g = (Group) SingletonBoard.getBoard().getChildren()
-									.get(SingletonBoard.getBoard().getCIRCLE_GROUP_INDEX());
-							Circle c = (Circle) g.getChildren().get(i);
-							if (c.getClass() == CandidatePoint.class) {
-								c.setVisible(true);
-							}
-						}
+			if (SingletonBoard.getBoard().getAiMoveStatus() == AiMoveStatus.DONE && !GuiBoardUtils.isGameEnded()
+					&& hasDragEvent && SingletonBoard.getBoard().getDeleteThisColor() == PieceColor.EMPTY) {
+				Group group = (Group) SingletonBoard.getBoard().getChildren()
+						.get(SingletonBoard.getBoard().getCIRCLE_GROUP_INDEX());
+				for (int i = 0; i < 24; i++) {
+					if (SingletonBoard.getBoard().getPieceColorList().get(i) == PieceColor.EMPTY) {
+						group.getChildren().get(i).setVisible(false);
 					}
-				} else if (GuiBoardUtils.canIThisPieceDelete()) {
-					Group group = (Group) SingletonBoard.getBoard().getChildren()
-							.get(SingletonBoard.getBoard().getCIRCLE_GROUP_INDEX());
-					int deletedPieceCoordinate = group.getChildren().indexOf(((Circle) e.getSource()));
-					group.getChildren().set(deletedPieceCoordinate,
-							CircleFactory.getCircle(Color.LIGHTGRAY, ((Circle) e.getSource()).getId(),
-									((Circle) e.getSource()).getLayoutX(), ((Circle) e.getSource()).getLayoutY(),
-									null));
-					SingletonBoard.getBoard().getPieceColorList().set(deletedPieceCoordinate, PieceColor.EMPTY);
-					SingletonBoard.getBoard().setDeleteThisColor(PieceColor.EMPTY);
-					SingletonBoard.getBoard().changeTurnStatus();
-					GuiMenuBarUtils.sbForMoveList.append("(Mill)->" +  GuiBoardUtils.getTextCoordinat(deletedPieceCoordinate) + "x  ");		
-					GuiMenuBarUtils.moveList.set(GuiMenuBarUtils.sbForMoveList.toString());
-					if (SingletonBoard.getBoard().getAiMoveStatus() == AiMoveStatus.DONE && !GuiBoardUtils.isGameEnded()) {
-						AiMove aiMove = new AiMove();
-						aiMove.start();
+				}
+				int[] candidatePoints;
+				if ((getColor() == Color.WHITE && SingletonBoard.getBoard().isWhiteFlying())
+						|| (getColor() == Color.BLACK && SingletonBoard.getBoard().isBlackFlying())) {
+					candidatePoints = MoveUtils.getFlyingStoneCandidateCoordinates();
+				} else {
+					candidatePoints = MoveUtils.getStoneCandidateCoordinates(Integer.parseInt(getId()));
+				}
+				for (int i : candidatePoints) {
+					Circle c = (Circle) group.getChildren().get(i);
+					if (c.getClass() == CandidatePoint.class) {
+						c.setVisible(true);
 					}
+				}
+			}
+			if (hasDragEvent && GuiBoardUtils.canIThisPieceDelete()
+					&& SingletonBoard.getBoard().getAiMoveStatus() == AiMoveStatus.DONE) {
+				Group group = (Group) SingletonBoard.getBoard().getChildren()
+						.get(SingletonBoard.getBoard().getCIRCLE_GROUP_INDEX());
+				int deletedPieceCoordinate = group.getChildren().indexOf(((Circle) e.getSource()));
+				group.getChildren().set(deletedPieceCoordinate,
+						CircleFactory.getCircle(Color.LIGHTGRAY, ((Circle) e.getSource()).getId(),
+								((Circle) e.getSource()).getLayoutX(), ((Circle) e.getSource()).getLayoutY(), null));
+				SingletonBoard.getBoard().getPieceColorList().set(deletedPieceCoordinate, PieceColor.EMPTY);
+				SingletonBoard.getBoard().setDeleteThisColor(PieceColor.EMPTY);
+				SingletonBoard.getBoard().changeTurnStatus();
+				GuiMenuBarUtils.sbForMoveList
+						.append("(Mill)->" + GuiBoardUtils.getTextCoordinat(deletedPieceCoordinate) + "x  ");
+				GuiMenuBarUtils.moveList.set(GuiMenuBarUtils.sbForMoveList.toString());
+				if (SingletonBoard.getBoard().getAiMoveStatus() == AiMoveStatus.DONE && !GuiBoardUtils.isGameEnded()) {
+					AiMove aiMove = new AiMove();
+					aiMove.start();
 				}
 			}
 		});

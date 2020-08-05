@@ -62,6 +62,7 @@ public class AiMove extends Thread {
 
 			SingletonBoard.getBoard().changeTurnStatus();
 			SingletonBoard.getBoard().setAiMoveStatus(AiMoveStatus.DONE);
+			GuiBoardUtils.isGameEnded();
 		}));
 		aimationTimeline.play();
 

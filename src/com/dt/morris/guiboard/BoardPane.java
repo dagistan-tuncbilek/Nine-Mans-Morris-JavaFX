@@ -23,6 +23,7 @@ public class BoardPane extends Pane {
 	private Difficulty difficulty = Difficulty.NORMAL;
 	private int CIRCLE_GROUP_INDEX;
 	private PieceColor deleteThisColor = PieceColor.EMPTY;
+	private int selectedPiece = -1;
 	private boolean isWhiteHuman = true;
 	private boolean isWhiteFlying = false;
 	private boolean isBlackFlying = false;
@@ -55,6 +56,7 @@ public class BoardPane extends Pane {
 		isWhiteFlying = false;
 		isWhiteFlying = false;
 		GuiMenuBarUtils.moveCounter = 0;
+		deleteThisColor = PieceColor.EMPTY;
 		if (!isWhiteHuman && this.turnStatus == TurnStatus.WHITE) {
 			AiMove aiMove = new AiMove();
 			aiMove.start();
@@ -139,5 +141,13 @@ public class BoardPane extends Pane {
 
 	public int getCIRCLE_GROUP_INDEX() {
 		return CIRCLE_GROUP_INDEX;
+	}
+
+	public int getSelectedPiece() {
+		return selectedPiece;
+	}
+
+	public void setSelectedPiece(int selectedPiece) {
+		this.selectedPiece = selectedPiece;
 	}
 }

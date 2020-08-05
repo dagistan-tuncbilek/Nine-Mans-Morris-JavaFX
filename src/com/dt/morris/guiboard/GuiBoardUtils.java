@@ -189,7 +189,6 @@ public class GuiBoardUtils {
 	public static Color getColor(Circle c) {
 		if (c.getClass() == WhiteCircle.class) {
 			return Color.WHITE;
-
 		} else if (c.getClass() == BlackCircle.class) {
 			return Color.BLACK;
 		} else {
@@ -198,14 +197,19 @@ public class GuiBoardUtils {
 	}
 
 	public static boolean canIThisPieceDelete() {
-		if (SingletonBoard.getBoard().getDeleteThisColor() == PieceColor.WHITE
-				&& SingletonBoard.getBoard().getTurnStatus() == TurnStatus.BLACK) {
-			return true;
-		} else if (SingletonBoard.getBoard().getDeleteThisColor() == PieceColor.BLACK
-				&& SingletonBoard.getBoard().getTurnStatus() == TurnStatus.WHITE) {
-			return true;
+
+		if (SingletonBoard.getBoard().getDeleteThisColor() == PieceColor.EMPTY) {
+			return false;
 		}
-		return false;
+		if (!SingletonBoard.getBoard().isWhiteHuman()
+				&& SingletonBoard.getBoard().getDeleteThisColor() == PieceColor.BLACK) {
+			return false;
+		}
+		if (SingletonBoard.getBoard().isWhiteHuman()
+				&& SingletonBoard.getBoard().getDeleteThisColor() == PieceColor.WHITE) {
+			return false;
+		}
+		return true;
 	}
 
 	public static void playAudio(String audioName) {
@@ -232,7 +236,6 @@ public class GuiBoardUtils {
 
 	public static boolean isGameEnded() {
 		final Board board = new Board(SingletonBoard.getBoard().getPieceColorList(), PieceColor.WHITE);
-		System.out.println("W: " + board.whitePlayer().getLegalMoves().size() + "  B: " + board.blackPlayer().getLegalMoves().size());
 		if (board.whitePlayer().getPieceCount() < 3 || board.whitePlayer().getLegalMoves().size() == 0) {
 			endGameWindow("Black");
 			System.out.println(board.whitePlayer().getLegalMoves().size());
@@ -241,7 +244,7 @@ public class GuiBoardUtils {
 			endGameWindow("White");
 			System.out.println(board.blackPlayer().getLegalMoves().size());
 			return true;
-		} 
+		}
 		if (board.whitePlayer().getPieceCount() == 3) {
 			SingletonBoard.getBoard().setWhiteFlying(true);
 		}

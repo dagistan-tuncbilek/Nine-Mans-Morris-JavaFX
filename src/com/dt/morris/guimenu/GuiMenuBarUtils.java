@@ -1,7 +1,5 @@
 package com.dt.morris.guimenu;
 
-import javax.swing.text.TabExpander;
-
 import com.dt.morris.gui.Difficulty;
 import com.dt.morris.gui.SingletonBoard;
 import com.dt.morris.guiboard.Analize;
@@ -61,7 +59,7 @@ public class GuiMenuBarUtils {
 	}
 
 	public static TableView<Analize> analizeArea() {
-		TableView<Analize> tableView = new TableView();
+		TableView<Analize> tableView = new TableView<Analize>();
 
 		TableColumn<Analize, String> column1 = new TableColumn<>("Move Number");
 		column1.setCellValueFactory(new PropertyValueFactory<>("totalMoves"));

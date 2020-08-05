@@ -5,7 +5,7 @@ import com.dt.morris.player.Player;
 
 public final class BoardEvaluator {
 
-	private final static int MOBILITY_MULTIPLIER = 0;
+	private final static int MOBILITY_MULTIPLIER = 1;
 	private static final BoardEvaluator INSTANCE = new BoardEvaluator();
 
 	private BoardEvaluator() {
@@ -26,16 +26,16 @@ public final class BoardEvaluator {
 
 	private static int strategicCoordinates(Player player) {
 		int bonus = 0;
-		int[] criticCooridinates = { 4, 10, 13, 19 };
+		int[] criticCooridinates = {4, 10, 13, 19};
 		for (int coordinate : criticCooridinates) {
 			if (player.getBoard().getPieceColorList().get(coordinate) == player.getColor()) {
-				bonus += 15;
+				bonus += 3;
 			}
 		}
 		int[] lessCriticCoordinates = { 1, 7, 9, 11, 12, 14, 16, 22 };
 		for (int coordinate : lessCriticCoordinates) {
 			if (player.getBoard().getPieceColorList().get(coordinate) == player.getColor()) {
-				bonus += 3;
+				bonus += 1;
 			}
 		}
 		return bonus;
@@ -58,6 +58,6 @@ public final class BoardEvaluator {
 	}
 
 	private static int depthBonus(final int depth) {
-		return depth == 0 ? 1 : 2 * depth;
+		return depth == 0 ? 1 : 3 * depth;
 	}
 }

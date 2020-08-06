@@ -14,7 +14,6 @@ import com.dt.morris.circle.CircleFactory;
 import com.dt.morris.circle.WhiteCircle;
 import com.dt.morris.gui.AiMoveStatus;
 import com.dt.morris.gui.SingletonBoard;
-import com.dt.morris.gui.TurnStatus;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -114,7 +113,7 @@ public class GuiBoardUtils {
 			line.setEndY(coor[3]);
 			line.setStyle("-fx-stroke-width:5;");
 			line.toBack();
-			line.setViewOrder(1);
+			line.toBack();
 			lineGroup.getChildren().add(line);
 		}
 		return lineGroup;

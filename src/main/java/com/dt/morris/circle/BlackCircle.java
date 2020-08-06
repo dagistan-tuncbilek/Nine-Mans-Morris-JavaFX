@@ -10,6 +10,6 @@ public class BlackCircle extends GuiPiece {
 		setVisible(true);
 		setFill(getColor());
 		setStroke(Color.BLACK);
-		setViewOrder(-99);
+		toBack();
 	}
 }

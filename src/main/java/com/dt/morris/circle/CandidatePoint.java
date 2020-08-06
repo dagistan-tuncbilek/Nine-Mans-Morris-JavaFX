@@ -10,7 +10,7 @@ public class CandidatePoint extends GuiPiece {
 		setVisible(false);
 		setFill(Color.rgb(0, 0, 0, 0.15));
 		setStroke(getColor());
-		setViewOrder(-11);
+		toFront();
 
 		setOnMousePressed(e -> {
 			mouseX = e.getSceneX();

@@ -10,6 +10,6 @@ public class WhiteCircle extends GuiPiece {
 		setVisible(true);
 		setFill(getColor());
 		setStroke(Color.BLACK);
-		setViewOrder(-99);
+		toFront();
 	}
 }

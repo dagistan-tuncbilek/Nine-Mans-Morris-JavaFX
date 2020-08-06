@@ -5,15 +5,11 @@ Turn based board game engine. Programs constructed with Java Engine as AI for Hu
 https://en.wikipedia.org/wiki/Nine_men%27s_morris
 
 ## Installation
-* JDK 14
-* JavaFX SDK 14.0.2.1
+* JDK 1.8
 * JUnit-Jupiter 5.6.2
 
 ### Used Paterns and Libraries
 
-* JavaFX
-* JDK 14
-* JavaFX 14 SDK
 * Engine desicion maker - MiniMax (Recursion)
 * Constructed Boards with Collections.unmodifiableLists.
 

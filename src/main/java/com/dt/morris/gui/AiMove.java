@@ -1,5 +1,7 @@
 package com.dt.morris.gui;
 
+import java.util.ArrayList;
+
 import com.dt.morris.board.PieceColor;
 import com.dt.morris.circle.CircleFactory;
 import com.dt.morris.engine.MiniMax;
@@ -62,7 +64,14 @@ public class AiMove extends Thread {
 
 			SingletonBoard.getBoard().changeTurnStatus();
 			SingletonBoard.getBoard().setAiMoveStatus(AiMoveStatus.DONE);
-			GuiBoardUtils.isGameEnded();
+			
+			SingletonBoard.getBoard().getWholeGameMoveList().add(new ArrayList<>(SingletonBoard.getBoard().getPieceColorList()));
+			
+			if (GuiBoardUtils.isGameEnded() || GuiBoardUtils.checkForStalemate()) {
+				SingletonBoard.getBoard().buildNewBord();
+			}
+			
+			
 		}));
 		aimationTimeline.play();
 

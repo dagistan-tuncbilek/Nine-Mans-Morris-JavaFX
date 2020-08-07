@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.dt.morris.board.Board;
 import com.dt.morris.board.PieceColor;
@@ -237,11 +239,9 @@ public class GuiBoardUtils {
 		final Board board = new Board(SingletonBoard.getBoard().getPieceColorList(), PieceColor.WHITE);
 		if (board.whitePlayer().getPieceCount() < 3 || board.whitePlayer().getLegalMoves().size() == 0) {
 			endGameWindow("Black");
-			System.out.println(board.whitePlayer().getLegalMoves().size());
 			return true;
 		} else if (board.blackPlayer().getPieceCount() < 3 || board.blackPlayer().getLegalMoves().size() == 0) {
 			endGameWindow("White");
-			System.out.println(board.blackPlayer().getLegalMoves().size());
 			return true;
 		}
 		if (board.whitePlayer().getPieceCount() == 3) {
@@ -259,6 +259,28 @@ public class GuiBoardUtils {
 		alert.setTitle("Nine Man's Morris");
 		alert.setHeaderText("Game Finished");
 		alert.setContentText("Good game. " + player + " won! Click OK to exit.");
+		alert.setOnHidden(evt -> alert.close());
+		alert.show();
+		return alert;
+	}
+
+	public static boolean checkForStalemate() {
+		List<List<PieceColor>> stalameteList = SingletonBoard.getBoard().getWholeGameMoveList().stream()
+				.filter(n -> Collections.frequency(SingletonBoard.getBoard().getWholeGameMoveList(), n) > 2)
+				.collect(Collectors.toList());
+		if (stalameteList.size() > 0) {
+			stalameteWindow();
+			return true;
+		}
+		return false;
+	}
+
+	public static Alert stalameteWindow() {
+		SingletonBoard.getBoard().setAiMoveStatus(AiMoveStatus.IN_PROCESS);
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Nine Man's Morris");
+		alert.setHeaderText("Stalamete");
+		alert.setContentText("Good game. Stalamete! Click OK to exit.");
 		alert.setOnHidden(evt -> alert.close());
 		alert.show();
 		return alert;

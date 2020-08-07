@@ -1,5 +1,7 @@
 package com.dt.morris.circle;
 
+import java.util.ArrayList;
+
 import com.dt.morris.board.PieceColor;
 import com.dt.morris.engine.BoardUtils;
 import com.dt.morris.gui.AiMove;
@@ -55,13 +57,17 @@ public abstract class GuiPiece extends Circle {
 							SingletonBoard.getBoard().getPieceColorList().set(targetCoord,
 									SingletonBoard.getBoard().getPieceColorList().get(currentCoord));
 							SingletonBoard.getBoard().getPieceColorList().set(currentCoord, PieceColor.EMPTY);
-
+							
+							SingletonBoard.getBoard().getWholeGameMoveList().add(new ArrayList<>(SingletonBoard.getBoard().getPieceColorList()));
+							
 							group.getChildren().set(targetCoord,
 									CircleFactory.getCircle(getColor(), targetCircle.getId(), targetCircle.getLayoutX(),
 											targetCircle.getLayoutY(), SingletonBoard.getBoard().isWhiteHuman()));
 							group.getChildren().set(currentCoord,
 									CircleFactory.getCircle(Color.LIGHTGRAY, getId(), this.oldX, this.oldY, null));
-
+							
+							
+							
 							if (SingletonBoard.getBoard().isWhiteHuman()) {
 								GuiMenuBarUtils.sbForMoveList.append(++GuiMenuBarUtils.moveCounter + ". ");
 							}
@@ -81,6 +87,8 @@ public abstract class GuiPiece extends Circle {
 							if (isMill) {
 								SingletonBoard.getBoard().setDeleteThisColor(
 										getColor() == Color.WHITE ? PieceColor.BLACK : PieceColor.WHITE);
+							} else if(GuiBoardUtils.checkForStalemate()) {
+								SingletonBoard.getBoard().buildNewBord();
 							} else {
 								SingletonBoard.getBoard().changeTurnStatus();
 								if (!GuiBoardUtils.isGameEnded()) {

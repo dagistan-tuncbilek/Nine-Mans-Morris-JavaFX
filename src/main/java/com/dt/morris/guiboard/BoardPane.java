@@ -1,6 +1,7 @@
 package com.dt.morris.guiboard;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.dt.morris.board.PieceColor;
@@ -27,9 +28,12 @@ public class BoardPane extends Pane {
 	private boolean isWhiteHuman = true;
 	private boolean isWhiteFlying = false;
 	private boolean isBlackFlying = false;
+	private List<List<PieceColor>> wholeGameMoveList;
 
 	public BoardPane() {
 		this.pieceColorList = GuiBoardUtils.getInitialColorList(isWhiteHuman);
+		wholeGameMoveList = new ArrayList<List<PieceColor>>();
+		wholeGameMoveList.add(new ArrayList<>(pieceColorList));
 		this.aiMoveStatus = AiMoveStatus.DONE;
 		this.turnStatus = TurnStatus.WHITE;
 		setStyle("-fx-background-color:#cce7e8;");
@@ -149,5 +153,13 @@ public class BoardPane extends Pane {
 
 	public void setSelectedPiece(int selectedPiece) {
 		this.selectedPiece = selectedPiece;
+	}
+
+	public List<List<PieceColor>> getWholeGameMoveList() {
+		return wholeGameMoveList;
+	}
+
+	public void setWholeGameMoveList(List<List<PieceColor>> wholeGameMoveList) {
+		this.wholeGameMoveList = wholeGameMoveList;
 	}
 }

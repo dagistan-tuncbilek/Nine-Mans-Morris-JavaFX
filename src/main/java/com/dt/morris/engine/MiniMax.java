@@ -57,8 +57,8 @@ public final class MiniMax {
 			currentValue = board.currentPlayer().getColor().isWhite()
 					? min(moveTransition.getBoard(), intelligentSearchDepth - 1)
 					: max(moveTransition.getBoard(), intelligentSearchDepth - 1);
-			System.out.println("\t" + toString() + " analyzing move (" + moveCounter + "/" + numMoves + ") " + move
-					+ " scores " + currentValue);
+//			System.out.println("\t" + toString() + " analyzing move (" + moveCounter + "/" + numMoves + ") " + move
+//					+ " scores " + currentValue);
 			try {
 				addObservableList(moveCounter, moveCounter, numMoves, GuiBoardUtils.getTextCoordinat(move.getCurrentCoordinate()),
 						GuiBoardUtils.getTextCoordinat(move.getDestinationCoordinate()), currentValue);

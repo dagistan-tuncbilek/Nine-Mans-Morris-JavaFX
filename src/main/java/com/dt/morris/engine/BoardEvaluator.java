@@ -5,7 +5,7 @@ import com.dt.morris.player.Player;
 
 public final class BoardEvaluator {
 
-	private final static int MOBILITY_MULTIPLIER = 1;
+	private final static int MOBILITY_MULTIPLIER = 2;
 	private static final BoardEvaluator INSTANCE = new BoardEvaluator();
 
 	private BoardEvaluator() {
@@ -43,7 +43,7 @@ public final class BoardEvaluator {
 
 	private static int gameOver(Player player) {
 		if (player.getPieceCount() < 3)
-			return -3000;
+			return -1000;
 		if (player.getOpponent().getPieceCount() < 3)
 			return 1000;
 		return 0;
@@ -54,7 +54,13 @@ public final class BoardEvaluator {
 	}
 
 	private static int mobility(final Player player) {
-		return MOBILITY_MULTIPLIER * (player.getLegalMoves().size() - player.getOpponent().getLegalMoves().size());
+		if (player.getOpponent().getLegalMoves().size()==0) {
+			return 300;
+		} else if(player.getLegalMoves().size() == 0) {
+			return -1000;
+		} else {
+			return MOBILITY_MULTIPLIER * (player.getLegalMoves().size() - player.getOpponent().getLegalMoves().size()*2);
+		}	
 	}
 
 	private static int depthBonus(final int depth) {

@@ -34,7 +34,13 @@ public final class MiniMax {
 	}
 
 	public Move execute(List<PieceColor> pieceColorList, PieceColor playerColor) {
-		GuiMenuBarUtils.analizeList.clear();
+		// For test case
+		try {
+			GuiMenuBarUtils.analizeList.clear();
+		}catch (ExceptionInInitializerError e) {
+			System.out.println("It must be test case");
+		}
+
 		Board board = new Board(pieceColorList, playerColor);
 		final long startTime = System.currentTimeMillis();
 		Move bestMove = MoveFactory.getNullMove();
@@ -53,15 +59,13 @@ public final class MiniMax {
 					: max(moveTransition.getBoard(), intelligentSearchDepth - 1);
 			System.out.println("\t" + toString() + " analyzing move (" + moveCounter + "/" + numMoves + ") " + move
 					+ " scores " + currentValue);
+			try {
+				addObservableList(moveCounter, moveCounter, numMoves, GuiBoardUtils.getTextCoordinat(move.getCurrentCoordinate()),
+						GuiBoardUtils.getTextCoordinat(move.getDestinationCoordinate()), currentValue);
+			} catch (Exception e) {
+				System.out.println("It must be test case");
+			}
 
-//					sb.append(BoardPane.moveList);
-//
-//					sb.append("\t" + toString() + " analyzing move" + "\t" + "(" + moveCounter + " / "
-//							+ numMoves + ") " + "\t\t" + GuiBoardUtils.getTextCoordinat(move.getCurrentCoordinate()) + "-"
-//							+ GuiBoardUtils.getTextCoordinat(move.getDestinationCoordinate()) + "    " + "\t" + " Score" + "\t:  "
-//							+ currentValue + "\n");
-			addObservableList(moveCounter, moveCounter, numMoves, GuiBoardUtils.getTextCoordinat(move.getCurrentCoordinate()),
-					GuiBoardUtils.getTextCoordinat(move.getDestinationCoordinate()), currentValue);
 			if (board.currentPlayer().getColor().isWhite() && currentValue >= highestSeenValue) {
 				highestSeenValue = currentValue;
 				bestMove = move;
@@ -77,9 +81,16 @@ public final class MiniMax {
 				this.boardsEvaluated, this.executionTime,
 				(1000 * ((double) this.boardsEvaluated / this.executionTime)));
 
-		appendToStringBuilder(bestMove.getCurrentCoordinate(), bestMove.getDestinationCoordinate(),
-				bestMove.getDeletedPieceCoordinate());
-		GuiMenuBarUtils.moveList.set(GuiMenuBarUtils.sbForMoveList.toString());
+		// For test case
+		try {
+			appendToStringBuilder(bestMove.getCurrentCoordinate(), bestMove.getDestinationCoordinate(),
+					bestMove.getDeletedPieceCoordinate());
+			GuiMenuBarUtils.moveList.set(GuiMenuBarUtils.sbForMoveList.toString());
+		} catch (ExceptionInInitializerError e) {
+			System.out.println("It must be test case");
+		}
+
+		
 
 		if (this.boardsEvaluated == Integer.MIN_VALUE || this.boardsEvaluated == Integer.MAX_VALUE) {
 			System.out.println("somethings wrong with the # of boards evaluated!");

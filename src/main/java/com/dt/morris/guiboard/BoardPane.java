@@ -56,6 +56,8 @@ public class BoardPane extends Pane {
 		this.turnStatus = TurnStatus.WHITE;
 		getChildren().set(CIRCLE_GROUP_INDEX, GuiBoardUtils.getCircles(isWhiteHuman));
 		pieceColorList = GuiBoardUtils.getInitialColorList(isWhiteHuman);
+		wholeGameMoveList.clear();
+		wholeGameMoveList.add(new ArrayList<>(pieceColorList));
 		setAiMoveStatus(AiMoveStatus.DONE);
 		isWhiteFlying = false;
 		isWhiteFlying = false;

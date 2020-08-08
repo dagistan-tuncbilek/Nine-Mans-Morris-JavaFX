@@ -1,16 +1,16 @@
 ## Nine Man's Morris - Version 2.0
 
-Turn based board game engine. Programs constructed with Java Engine as AI for Human-AI games.
+Turn based board game. Program constructed with Java Engine as AI for Human-AI games.
 
 https://en.wikipedia.org/wiki/Nine_men%27s_morris
 
 ## Installation
 * JDK 1.8
-* JUnit-Jupiter 5.6.2
+* JUnit 5.6.2
 
-### Used Paterns and Libraries
+### Used Patterns and Libraries
 
-* Engine desicion maker - MiniMax (Recursion)
+* Engine decision maker - MiniMax (Recursion)
 * Constructed Boards with Collections.unmodifiableLists.
 
 

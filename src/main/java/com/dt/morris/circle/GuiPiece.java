@@ -45,9 +45,9 @@ public abstract class GuiPiece extends Circle {
 				for (int targetCoord : candidatePoints) {
 					Circle targetCircle = (Circle) group.getChildren().get(targetCoord);
 					if (targetCircle.getClass() == CandidatePoint.class) {
-						
+
 						targetCircle.setVisible(false);
-						
+
 						if ((e.getSceneX() - targetCircle.getLayoutX()) - 20 < 25
 								&& (e.getSceneX() - targetCircle.getLayoutX()) > -25
 								&& (e.getSceneY() - targetCircle.getLayoutY() - 20) - 25 < 20
@@ -57,17 +57,16 @@ public abstract class GuiPiece extends Circle {
 							SingletonBoard.getBoard().getPieceColorList().set(targetCoord,
 									SingletonBoard.getBoard().getPieceColorList().get(currentCoord));
 							SingletonBoard.getBoard().getPieceColorList().set(currentCoord, PieceColor.EMPTY);
-							
-							SingletonBoard.getBoard().getWholeGameMoveList().add(new ArrayList<>(SingletonBoard.getBoard().getPieceColorList()));
-							
+
+							SingletonBoard.getBoard().getWholeGameMoveList()
+									.add(new ArrayList<>(SingletonBoard.getBoard().getPieceColorList()));
+
 							group.getChildren().set(targetCoord,
 									CircleFactory.getCircle(getColor(), targetCircle.getId(), targetCircle.getLayoutX(),
 											targetCircle.getLayoutY(), SingletonBoard.getBoard().isWhiteHuman()));
 							group.getChildren().set(currentCoord,
 									CircleFactory.getCircle(Color.LIGHTGRAY, getId(), this.oldX, this.oldY, null));
-							
-							
-							
+
 							if (SingletonBoard.getBoard().isWhiteHuman()) {
 								GuiMenuBarUtils.sbForMoveList.append(++GuiMenuBarUtils.moveCounter + ". ");
 							}
@@ -87,9 +86,7 @@ public abstract class GuiPiece extends Circle {
 							if (isMill) {
 								SingletonBoard.getBoard().setDeleteThisColor(
 										getColor() == Color.WHITE ? PieceColor.BLACK : PieceColor.WHITE);
-							} else if(GuiBoardUtils.checkForStalemate()) {
-								SingletonBoard.getBoard().buildNewBord();
-							} else {
+							} else if (!GuiBoardUtils.checkForStalemate()) {
 								SingletonBoard.getBoard().changeTurnStatus();
 								if (!GuiBoardUtils.isGameEnded()) {
 									AiMove aiMove = new AiMove();

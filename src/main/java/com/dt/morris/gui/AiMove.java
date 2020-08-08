@@ -65,13 +65,7 @@ public class AiMove extends Thread {
 			SingletonBoard.getBoard().changeTurnStatus();
 			SingletonBoard.getBoard().setAiMoveStatus(AiMoveStatus.DONE);
 			
-			SingletonBoard.getBoard().getWholeGameMoveList().add(new ArrayList<>(SingletonBoard.getBoard().getPieceColorList()));
-			
-			if (GuiBoardUtils.isGameEnded() || GuiBoardUtils.checkForStalemate()) {
-				SingletonBoard.getBoard().buildNewBord();
-			}
-			
-			
+			SingletonBoard.getBoard().getWholeGameMoveList().add(new ArrayList<>(SingletonBoard.getBoard().getPieceColorList()));					
 		}));
 		aimationTimeline.play();
 

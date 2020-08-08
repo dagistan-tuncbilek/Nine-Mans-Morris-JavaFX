@@ -258,8 +258,11 @@ public class GuiBoardUtils {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Nine Man's Morris");
 		alert.setHeaderText("Game Finished");
-		alert.setContentText("Good game. " + player + " won! Click OK to exit.");
-		alert.setOnHidden(evt -> alert.close());
+		alert.setContentText("Good game. " + player + " won! Click OK to begin a new game.");
+		alert.setOnHidden(evt -> {
+			SingletonBoard.getBoard().buildNewBord();
+			alert.close();
+		});
 		alert.show();
 		return alert;
 	}
@@ -280,8 +283,11 @@ public class GuiBoardUtils {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Nine Man's Morris");
 		alert.setHeaderText("Stalamete");
-		alert.setContentText("Good game. Stalamete! Click OK to exit.");
-		alert.setOnHidden(evt -> alert.close());
+		alert.setContentText("Good game. Stalamete! Click OK to begin a new game.");
+		alert.setOnHidden(evt -> {
+			SingletonBoard.getBoard().buildNewBord();
+			alert.close();
+		});
 		alert.show();
 		return alert;
 	}

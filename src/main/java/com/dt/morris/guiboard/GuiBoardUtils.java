@@ -259,7 +259,7 @@ public class GuiBoardUtils {
 		alert.setTitle("Nine Man's Morris");
 		alert.setHeaderText("Game Finished");
 		alert.setContentText("Good game. " + player + " won! Click OK to begin a new game.");
-		alert.setOnHidden(evt -> {
+		alert.setOnHidden(e -> {
 			SingletonBoard.getBoard().buildNewBord();
 			alert.close();
 		});
@@ -284,7 +284,7 @@ public class GuiBoardUtils {
 		alert.setTitle("Nine Man's Morris");
 		alert.setHeaderText("Stalamete");
 		alert.setContentText("Good game. Stalamete! Click OK to begin a new game.");
-		alert.setOnHidden(evt -> {
+		alert.setOnHidden(e -> {
 			SingletonBoard.getBoard().buildNewBord();
 			alert.close();
 		});

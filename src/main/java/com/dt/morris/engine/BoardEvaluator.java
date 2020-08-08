@@ -59,7 +59,7 @@ public final class BoardEvaluator {
 		} else if(player.getLegalMoves().size() == 0) {
 			return -1000;
 		} else {
-			return MOBILITY_MULTIPLIER * (player.getLegalMoves().size() - player.getOpponent().getLegalMoves().size()*2);
+			return MOBILITY_MULTIPLIER * 0;
 		}	
 	}
 

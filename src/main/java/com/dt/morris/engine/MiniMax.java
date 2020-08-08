@@ -61,7 +61,7 @@ public final class MiniMax {
 //					+ " scores " + currentValue);
 			try {
 				addObservableList(moveCounter, moveCounter, numMoves, GuiBoardUtils.getTextCoordinat(move.getCurrentCoordinate()),
-						GuiBoardUtils.getTextCoordinat(move.getDestinationCoordinate()), currentValue);
+						GuiBoardUtils.getTextCoordinat(move.getDestinationCoordinate()), currentValue, board);
 			} catch (Exception e) {
 				System.out.println("It must be test case");
 			}
@@ -98,9 +98,14 @@ public final class MiniMax {
 		return bestMove;
 	}
 
-	private void addObservableList(int i, int moveCounter, int numMoves, String firstMove, String secondMove, int score) {
+	private void addObservableList(int i, int moveCounter, int numMoves, String firstMove, String secondMove, int score, Board board) {
 		GuiMenuBarUtils.analizeList.add(new Analize(i + "/" + numMoves, firstMove + "-" + secondMove, score));
-		GuiMenuBarUtils.analizeList.sort((a, b) -> Integer.compare(b.getScore(), a.getScore()));
+		if (board.currentPlayer().getColor() == PieceColor.WHITE) {
+			GuiMenuBarUtils.analizeList.sort((a, b) -> Integer.compare(b.getScore(), a.getScore()));
+		} else {
+			GuiMenuBarUtils.analizeList.sort((a, b) -> Integer.compare(a.getScore(), b.getScore()));
+		}
+		
 	}
 
 	private void appendToStringBuilder(int currentCoordinate, int destinationCoordinate, int deletedPieceCoordinate) {

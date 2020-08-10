@@ -63,6 +63,8 @@ public class BoardPane extends Pane {
 		isWhiteFlying = false;
 		GuiMenuBarUtils.moveCounter = 0;
 		deleteThisColor = PieceColor.EMPTY;
+		GuiMenuBarUtils.moveList.set("");
+		GuiMenuBarUtils.analizeList.clear();
 		if (!isWhiteHuman && this.turnStatus == TurnStatus.WHITE) {
 			AiMove aiMove = new AiMove();
 			aiMove.start();

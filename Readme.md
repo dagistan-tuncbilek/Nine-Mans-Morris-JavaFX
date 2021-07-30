@@ -16,5 +16,3 @@ https://en.wikipedia.org/wiki/Nine_men%27s_morris
 
 A simple model has been made by Angular (With basic engine)
 http://ninemansmorris.atwebpages.com/
-
-#### * Version 2.1 is under construction.
